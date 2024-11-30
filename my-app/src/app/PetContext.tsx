@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, ReactNode, useContext, useState, Dispatch } from 'react';
+import { createContext, ReactNode, useContext, useState, Dispatch, SetStateAction } from 'react';
   
 interface PetContextProviderProps {
   children: ReactNode;
@@ -8,9 +8,9 @@ interface PetContextProviderProps {
 
 interface Pet {
   name: string;
-  setName: Dispatch<any>
+  setName: Dispatch<SetStateAction<string>>
   stats: { [key: string]: number };
-  setStats:  Dispatch<any>;
+  setStats:  Dispatch<SetStateAction<{ [key: string]: number }>>;
 }
   
 const PetContext = createContext<Pet>({
@@ -31,7 +31,7 @@ export default function PetContextProvider({ children }: PetContextProviderProps
   }
 
   const [name, setName] = useState<string>('Tamagotchi');
-  const [stats, setStats] = useState(initialStats);
+  const [stats, setStats] = useState<{ [key: string]: number }>(initialStats);
 
   return (
     <PetContext.Provider value={{ name, setName, stats, setStats }}>
