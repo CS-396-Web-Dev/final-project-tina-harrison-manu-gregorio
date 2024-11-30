@@ -1,16 +1,26 @@
 import { Jersey_20 } from 'next/font/google';
+import StatsSection from './StatsSection';
+import ActionButtonSection from './ActionButtonSection';
+import Log from './Log';
 
-const jersey20 = Jersey_20({
+export const jersey20 = Jersey_20({
   subsets: ['latin'],
   weight: '400'
 });
 
 export default function Home() {
   return (
-    <div className="text-center mt-3 h-screen">
+    <div className="h-screen overflow-hidden mt-3 text-center">
       <h1 className={`${jersey20.className} text-4xl`}>Tamagotchi</h1>
-      <div className="h-px w-full bg-black mt-3"></div>
-      <div className="h-5/6 w-1/4 bg-sky-400 mt-8 ml-28 rounded-md"></div>
+      <div className="w-full h-px mt-3 bg-black"></div>
+      <main className="flex h-full mt-8">
+        <div className="w-1/4 h-5/6 ml-32 bg-sky-400 rounded-md"></div>
+        <div className="flex flex-col flex-grow ml-16 mr-32">
+          <StatsSection />
+          <ActionButtonSection />
+          <Log />
+        </div>
+      </main>
     </div>
   );
 }
