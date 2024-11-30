@@ -1,12 +1,17 @@
+"use client"
+
 import StatsSection from './StatsSection';
 import ActionButtonSection from './ActionButtonSection';
 import Log from './Log';
 import { jersey20 } from './fonts/fonts';
+import { usePetContext } from './PetContext';
 
 export default function Home() {
+  const { name } = usePetContext();
+
   return (
     <div className="h-screen overflow-hidden mt-3 text-center">
-      <h1 className={`${jersey20.className} text-4xl`}>Tamagotchi</h1>
+      <h1 className={`${jersey20.className} text-4xl`}>{ name }</h1>
       <div className="w-full h-px mt-3 bg-black"></div>
       <main className="flex h-full mt-8">
         <div className="w-1/4 h-5/6 ml-32 bg-sky-400 rounded-md"></div>
