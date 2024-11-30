@@ -7,8 +7,9 @@ const jersey20 = Jersey_20({
 
 export default function Home() {
   return (
-    <div className="flex justify-center mt-3">
+    <div className="text-center mt-3">
       <h1 className={`${jersey20.className} text-4xl`}>Tamagotchi</h1>
+      <div className="h-px w-full bg-black mt-3"></div>
     </div>
   );
 }
