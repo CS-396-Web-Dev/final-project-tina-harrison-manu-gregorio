@@ -1,12 +1,7 @@
-import { Jersey_20 } from 'next/font/google';
 import StatsSection from './StatsSection';
 import ActionButtonSection from './ActionButtonSection';
 import Log from './Log';
-
-export const jersey20 = Jersey_20({
-  subsets: ['latin'],
-  weight: '400'
-});
+import { jersey20 } from './fonts/fonts';
 
 export default function Home() {
   return (

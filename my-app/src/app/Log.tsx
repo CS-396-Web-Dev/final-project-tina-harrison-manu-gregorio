@@ -1,4 +1,4 @@
-import { jersey20 } from "./page";
+import { jersey20 } from "./fonts/fonts";
 
 export default function Log() {
     return (
