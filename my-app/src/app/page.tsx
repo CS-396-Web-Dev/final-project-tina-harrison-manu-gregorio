@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import StatsSection from './StatsSection';
 import ActionButtonSection from './ActionButtonSection';
@@ -8,15 +8,30 @@ import { usePetContext } from './PetContext';
 import { useEffect } from 'react';
 
 export default function Home() {
-  const { name, setStats } = usePetContext();
+  const { name, setStats, addToLogs } = usePetContext();
+
+  const statToDescriptor: { [key: string]: string } = {
+    'Hunger': 'hungry',
+    'Happiness': 'sad',
+    'Sleep': 'sleepy',
+    'Hygiene': 'stinky'
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
       setStats((prevStats) => {
         const updatedStats = { ...prevStats };
         for (const key in updatedStats) {
-          const randomDecrement = Math.floor(Math.random() * 4);
-          updatedStats[key] = Math.max(0, updatedStats[key] - randomDecrement);
+          const randomDecrement = Math.floor(Math.random() * 3);
+          const newStat = updatedStats[key] - randomDecrement;
+          
+          if (newStat <= 5) {
+            addToLogs(Date.now(), `${name} is ${statToDescriptor[key]}!!!`);
+          } else if (newStat <= 20) {
+            addToLogs(Date.now(), `${name} is getting ${statToDescriptor[key]}...`);
+          }
+
+          updatedStats[key] = Math.max(0, newStat);
         }
         return updatedStats;
       });
