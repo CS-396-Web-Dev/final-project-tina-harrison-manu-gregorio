@@ -33,6 +33,11 @@ export default function Home() {
 
           updatedStats[key] = Math.max(0, newStat);
         }
+
+        if (typeof localStorage != 'undefined') {
+          localStorage.setItem('stats', JSON.stringify(updatedStats));
+        }
+        
         return updatedStats;
       });
     }, 5000);
