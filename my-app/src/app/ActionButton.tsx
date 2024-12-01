@@ -6,16 +6,16 @@ interface ActionButtonProps {
     color: string;
 }
 
-const actionToStatMap: { [key: string]: string } = {
-    "Feed": "Hunger",
-    "Play": "Happiness",
-    "Sleep": "Sleep",
-    "Clean": "Hygiene"
-};
-
 export default function ActionButton({ label, color }: ActionButtonProps) {
     const { name, setStats, growUp, addToLogs } = usePetContext();
     const [feedCount, setFeedCount] = useState<number>(0);
+
+    const actionToStatMap: { [key: string]: string } = {
+        "Feed": "Hunger",
+        "Play": "Happiness",
+        "Sleep": "Sleep",
+        "Clean": "Hygiene"
+    };
 
     const actionToMessageMap: { [key: string]: string } = {
         "Feed": `You fed ${name}!`,
