@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { jersey20 } from "./fonts/fonts";
 import { usePetContext } from "./PetContext";
 
@@ -14,15 +15,25 @@ const actionToStatMap: { [key: string]: string } = {
 };
 
 export default function ActionButton({ label, color }: ActionButtonProps) {
-    const { setStats } = usePetContext();
+    const { setStats, growUp } = usePetContext();
+    const [feedCount, setFeedCount] = useState<number>(0);
 
-    const handleClick = () => {
+    const handleClick = () => {        
         setStats((prevStats) => {
             const updatedStats = { ...prevStats };
             const key = actionToStatMap[label];
             updatedStats[key] = Math.min(100, updatedStats[key] + 10);
             return updatedStats;
         })
+
+        if (label == "Feed") {
+            if (feedCount == 4) {
+                growUp();
+                setFeedCount(0);
+            } else {
+                setFeedCount(prevCount => prevCount + 1);
+            }
+        }
     }
 
     return (
