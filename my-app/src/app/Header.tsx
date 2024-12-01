@@ -28,8 +28,9 @@ export default function Header() {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    onKeyDown={handleKeyDown} 
-                    />
+                    onKeyDown={handleKeyDown}
+                    onBlur={() => setIsEditing(false)}
+                />
                 : <div className="flex items-center justify-center">
                     <img className="absolute left-4 w-5 h-5 cursor-pointer" src="/reset.png" onClick={resetPet}/>
                     <h1 className="text-4xl">{name}</h1>
