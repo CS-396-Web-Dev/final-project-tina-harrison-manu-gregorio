@@ -71,9 +71,19 @@ export default function PetContextProvider({ children }: PetContextProviderProps
     const [logs, setLogs] = useState<string[]>([]);
 
     useEffect(() => {
+        const savedName = localStorage.getItem('name');
+        if (savedName) {
+            setName(JSON.parse(savedName));
+        }
+        
         const savedStats = localStorage.getItem('stats');
         if (savedStats) {
             setStats(JSON.parse(savedStats));
+        }
+
+        const savedStageOfLife = localStorage.getItem('stageOfLife');
+        if (savedStageOfLife) {
+            setStageOfLife(JSON.parse(savedStageOfLife));
         }
 
         const savedLogs = localStorage.getItem('logs');
@@ -83,9 +93,11 @@ export default function PetContextProvider({ children }: PetContextProviderProps
     }, []);
 
     useEffect(() => {
+        localStorage.setItem('name', JSON.stringify(name));
         localStorage.setItem('stats', JSON.stringify(stats));
+        localStorage.setItem('stageOfLife', JSON.stringify(stageOfLife));
         localStorage.setItem('logs', JSON.stringify(logs));
-    }, [stats, logs]);
+    }, [name, stats, stageOfLife, logs]);
 
     return (
         <PetContext.Provider value={{ name, setName, stats, setStats, stageOfLife, growUp, logs, addToLogs }}>
