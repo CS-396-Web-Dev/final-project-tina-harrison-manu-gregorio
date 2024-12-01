@@ -61,20 +61,28 @@ export default function PetContextProvider({ children }: PetContextProviderProps
         const formattedDate = formatter.format(new Date(timestamp))
         setLogs(prevLogs => {
             const updatedLogs = [...prevLogs, `${formattedDate} CST ${message}`];
-            localStorage.setItem('logs', JSON.stringify(updatedLogs));
-            return updatedLogs
+            if (typeof localStorage != 'undefined') {
+                localStorage.setItem('logs', JSON.stringify(updatedLogs));
+            }
+            return updatedLogs;
         });
     }
 
     const [name, setName] = useState<string>('Tamagotchi');
     const [stats, setStats] = useState<{ [key: string]: number }>(() => {
-        const savedStats = localStorage.getItem('stats');
-        return savedStats ? JSON.parse(savedStats) : initialStats;
+        if (typeof localStorage != 'undefined') {
+            const savedStats = localStorage.getItem('stats');
+            return savedStats ? JSON.parse(savedStats) : initialStats;
+        }
+        return initialStats;
     });
     const [stageOfLife, setStageOfLife] = useState<string>('Baby');
     const [logs, setLogs] = useState<string[]>(() => {
-        const savedLogs = localStorage.getItem('logs');
-        return savedLogs ? JSON.parse(savedLogs) : [];
+        if (typeof localStorage != 'undefined') {
+            const savedLogs = localStorage.getItem('logs');
+            return savedLogs ? JSON.parse(savedLogs) : [];
+        }
+        return [];
     });
 
     return (
