@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePetContext } from "./PetContext";
 
 export default function Header() {
-    const { name, setName } = usePetContext();
+    const { name, setName, resetPet } = usePetContext();
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -12,10 +12,6 @@ export default function Header() {
             inputRef.current.setSelectionRange(inputRef.current.value.length, inputRef.current.value.length);
         }
     }, [isEditing]);
-
-    const handleClick = () => {
-        setIsEditing(true);
-    }
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
@@ -32,11 +28,13 @@ export default function Header() {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    onKeyDown={handleKeyDown} 
+                    onKeyDown={handleKeyDown}
+                    onBlur={() => setIsEditing(false)}
                 />
                 : <div className="flex items-center justify-center">
+                    <img className="absolute left-4 w-5 h-5 cursor-pointer" src="/reset.png" onClick={resetPet}/>
                     <h1 className="text-4xl">{name}</h1>
-                    <img className="w-5 h-5 ml-2 cursor-pointer" src="/pencil.png" alt="Edit pet name" onClick={handleClick} />
+                    <img className="w-5 h-5 ml-2 cursor-pointer" src="/pencil.png" alt="Edit pet name" onClick={() => setIsEditing(true)} />
                 </div>
             }
             <div className="w-full h-px mt-3 bg-black"></div>
