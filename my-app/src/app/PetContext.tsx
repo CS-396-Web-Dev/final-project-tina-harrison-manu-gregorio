@@ -57,7 +57,7 @@ export default function PetContextProvider({ children }: PetContextProviderProps
     });
     const addToLogs = (timestamp: number, message: string) => {
         const formattedDate = formatter.format(new Date(timestamp))
-        setLogs(prevLogs => [...prevLogs, `${formattedDate} ${message}`]);
+        setLogs(prevLogs => [...prevLogs, `${formattedDate} CST ${message}`]);
     }
 
     const [name, setName] = useState<string>('Tamagotchi');
