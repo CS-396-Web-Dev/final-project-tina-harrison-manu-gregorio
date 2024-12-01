@@ -2,7 +2,7 @@
 
 import StatsSection from './StatsSection';
 import ActionButtonSection from './ActionButtonSection';
-import Log from './Log';
+import LogSection from './LogSection';
 import { jersey20 } from './fonts/fonts';
 import { usePetContext } from './PetContext';
 import { useEffect } from 'react';
@@ -34,7 +34,7 @@ export default function Home() {
         <div className="flex flex-col ml-16">
           <StatsSection />
           <ActionButtonSection />
-          <Log />
+          <LogSection />
         </div>
       </main>
     </div>
