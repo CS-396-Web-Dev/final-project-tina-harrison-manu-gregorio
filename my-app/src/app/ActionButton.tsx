@@ -32,9 +32,6 @@ export default function ActionButton({ label, color }: ActionButtonProps) {
             const key = actionToStatMap[label];
             updatedStats[key] = Math.min(100, updatedStats[key] + 10);
 
-            if (typeof localStorage != 'undefined') {
-                localStorage.setItem('stats', JSON.stringify(updatedStats));
-            }
             return updatedStats;
         })
 

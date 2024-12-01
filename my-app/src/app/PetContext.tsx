@@ -1,6 +1,6 @@
-"use client"
+'use client'
 
-import { createContext, ReactNode, useContext, useState, Dispatch, SetStateAction } from 'react';
+import { createContext, ReactNode, useContext, useState, Dispatch, SetStateAction, useEffect } from 'react';
   
 interface PetContextProviderProps {
     children: ReactNode;
@@ -61,29 +61,31 @@ export default function PetContextProvider({ children }: PetContextProviderProps
         const formattedDate = formatter.format(new Date(timestamp))
         setLogs(prevLogs => {
             const updatedLogs = [...prevLogs, `${formattedDate} CST ${message}`];
-            if (typeof localStorage != 'undefined') {
-                localStorage.setItem('logs', JSON.stringify(updatedLogs));
-            }
             return updatedLogs;
         });
     }
 
     const [name, setName] = useState<string>('Tamagotchi');
-    const [stats, setStats] = useState<{ [key: string]: number }>(() => {
-        if (typeof localStorage != 'undefined') {
-            const savedStats = localStorage.getItem('stats');
-            return savedStats ? JSON.parse(savedStats) : initialStats;
-        }
-        return initialStats;
-    });
+    const [stats, setStats] = useState<{ [key: string]: number }>(initialStats);
     const [stageOfLife, setStageOfLife] = useState<string>('Baby');
-    const [logs, setLogs] = useState<string[]>(() => {
-        if (typeof localStorage != 'undefined') {
-            const savedLogs = localStorage.getItem('logs');
-            return savedLogs ? JSON.parse(savedLogs) : [];
+    const [logs, setLogs] = useState<string[]>([]);
+
+    useEffect(() => {
+        const savedStats = localStorage.getItem('stats');
+        if (savedStats) {
+            setStats(JSON.parse(savedStats));
         }
-        return [];
-    });
+
+        const savedLogs = localStorage.getItem('logs');
+        if (savedLogs) {
+            setLogs(JSON.parse(savedLogs));
+        }
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem('stats', JSON.stringify(stats));
+        localStorage.setItem('logs', JSON.stringify(logs));
+    }, [stats, logs]);
 
     return (
         <PetContext.Provider value={{ name, setName, stats, setStats, stageOfLife, growUp, logs, addToLogs }}>
