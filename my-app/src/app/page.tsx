@@ -5,7 +5,7 @@ import ActionButtonSection from './ActionButtonSection';
 import LogSection from './LogSection';
 import { jersey20 } from './fonts/fonts';
 import { usePetContext } from './PetContext';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 export default function Home() {
   const { name, setStats, addToLogs } = usePetContext();
