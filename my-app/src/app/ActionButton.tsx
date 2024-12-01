@@ -25,6 +25,8 @@ export default function ActionButton({ label, color }: ActionButtonProps) {
     const [feedCount, setFeedCount] = useState<number>(0);
 
     const handleClick = () => {        
+        addToLogs(Date.now(), actionToMessageMap[label]);
+
         setStats((prevStats) => {
             const updatedStats = { ...prevStats };
             const key = actionToStatMap[label];
@@ -40,8 +42,6 @@ export default function ActionButton({ label, color }: ActionButtonProps) {
                 setFeedCount(prevCount => prevCount + 1);
             }
         }
-
-        addToLogs(Date.now(), actionToMessageMap[label]);
     }
 
     return (

@@ -42,7 +42,9 @@ export default function PetContextProvider({ children }: PetContextProviderProps
     const growUp = () => {
         const index = stagesOfLife.indexOf(stageOfLife);
         if (index < stagesOfLife.length - 1) {
-            setStageOfLife(stagesOfLife[index + 1]);
+            const newStage = stagesOfLife[index + 1]
+            setStageOfLife(newStage);
+            addToLogs(Date.now(), `Tamagotchi is now a ${newStage.toLowerCase()}!`)
         }
     }
 
