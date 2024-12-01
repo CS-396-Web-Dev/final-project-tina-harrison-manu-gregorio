@@ -44,7 +44,7 @@ export default function PetContextProvider({ children }: PetContextProviderProps
         if (index < stagesOfLife.length - 1) {
             const newStage = stagesOfLife[index + 1]
             setStageOfLife(newStage);
-            addToLogs(Date.now(), `Tamagotchi is now a ${newStage.toLowerCase()}!`)
+            addToLogs(Date.now(), `${name} is now a ${newStage.toLowerCase()}!`)
         }
     }
 

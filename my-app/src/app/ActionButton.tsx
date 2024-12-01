@@ -13,16 +13,16 @@ const actionToStatMap: { [key: string]: string } = {
     "Clean": "Hygiene"
 };
 
-const actionToMessageMap: { [key: string]: string } = {
-    "Feed": "You fed Tamagotchi!",
-    "Play": "You played with Tamagotchi!",
-    "Sleep": "You put Tamagotchi to bed!",
-    "Clean": "You bathed Tamagotchi!"
-};
-
 export default function ActionButton({ label, color }: ActionButtonProps) {
-    const { setStats, growUp, addToLogs } = usePetContext();
+    const { name, setStats, growUp, addToLogs } = usePetContext();
     const [feedCount, setFeedCount] = useState<number>(0);
+
+    const actionToMessageMap: { [key: string]: string } = {
+        "Feed": `You fed ${name}!`,
+        "Play": `You played with ${name}!`,
+        "Sleep": `You put ${name} to bed!`,
+        "Clean": `You bathed ${name}!`
+    };
 
     const handleClick = () => {        
         addToLogs(Date.now(), actionToMessageMap[label]);
