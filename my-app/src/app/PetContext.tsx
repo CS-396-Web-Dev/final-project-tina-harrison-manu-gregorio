@@ -12,7 +12,7 @@ interface Pet {
   stats: { [key: string]: number };
   setStats:  Dispatch<SetStateAction<{ [key: string]: number }>>;
   stageOfLife: string;
-  setStageOfLife: Dispatch<SetStateAction<string>>;
+  growUp:  Dispatch<SetStateAction<void>>;
 }
   
 const PetContext = createContext<Pet>({
@@ -21,7 +21,7 @@ const PetContext = createContext<Pet>({
   stats : {},
   setStats: () => {},
   stageOfLife: '',
-  setStageOfLife: () => {}
+  growUp: () => {}
 });
 
 export const usePetContext = () => useContext(PetContext);
@@ -34,12 +34,20 @@ export default function PetContextProvider({ children }: PetContextProviderProps
     'Hygiene': 100
   }
 
+  const stagesOfLife = ['Baby', 'Child', 'Teen', 'Adult', 'Senior'];
+  const growUp = () => {
+    const index = stagesOfLife.indexOf(stageOfLife);
+    if (index < stagesOfLife.length - 1) {
+      setStageOfLife(stagesOfLife[index + 1]);
+    }
+  }
+
   const [name, setName] = useState<string>('Tamagotchi');
   const [stats, setStats] = useState<{ [key: string]: number }>(initialStats);
   const [stageOfLife, setStageOfLife] = useState<string>('Baby');
 
   return (
-    <PetContext.Provider value={{ name, setName, stats, setStats, stageOfLife, setStageOfLife }}>
+    <PetContext.Provider value={{ name, setName, stats, setStats, stageOfLife, growUp }}>
       {children}
     </PetContext.Provider>
   );
