@@ -6,6 +6,7 @@ import LogSection from './LogSection';
 import { jersey20 } from './fonts/fonts';
 import { usePetContext } from './PetContext';
 import { useEffect } from 'react';
+import Header from './Header';
 
 export default function Home() {
   const { name, setStats, addToLogs } = usePetContext();
@@ -43,10 +44,7 @@ export default function Home() {
 
   return (
     <div className={`${jersey20.className} h-screen mt-3 text-center lg:overflow-hidden`}>
-      <header>
-        <h1 className="text-4xl">{ name }</h1>
-        <div className="w-full h-px mt-3 bg-black"></div>
-      </header>
+      <Header />
       <main className="lg:flex lg:flex-row h-full mx-5 justify-center">
         <div className="lg:w-1/3 h-5/6 mt-5 bg-sky-400 rounded-md"></div>
         <div className="flex flex-col lg:ml-16">
