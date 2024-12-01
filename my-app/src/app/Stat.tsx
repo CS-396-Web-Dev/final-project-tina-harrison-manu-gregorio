@@ -10,5 +10,5 @@ export default function Stat({ label, value }: StatProps) {
         <div>
             <h3 className={`${jersey20.className} text-xl`}>{label}: {value}%</h3>
         </div>
-    )
+    );
 }

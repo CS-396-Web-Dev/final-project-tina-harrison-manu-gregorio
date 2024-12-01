@@ -19,8 +19,8 @@ export default function ActionButton({ label, color }: ActionButtonProps) {
     const handleClick = () => {
         setStats((prevStats) => {
             const updatedStats = { ...prevStats };
-            const stat = actionToStatMap[label];
-            updatedStats[stat] = Math.min(100, updatedStats[stat] + 10);
+            const key = actionToStatMap[label];
+            updatedStats[key] = Math.min(100, updatedStats[key] + 10);
             return updatedStats;
         })
     }

@@ -14,7 +14,7 @@ export default function Home() {
     const interval = setInterval(() => {
       setStats((prevStats) => {
         const updatedStats = { ...prevStats };
-        for (let key in updatedStats) {
+        for (const key in updatedStats) {
           const randomDecrement = Math.floor(Math.random() * 4);
           updatedStats[key] = Math.max(0, updatedStats[key] - randomDecrement);
         }
