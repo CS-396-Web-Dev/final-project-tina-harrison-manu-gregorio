@@ -16,9 +16,7 @@ export default function Home() {
         const updatedStats = { ...prevStats };
         for (let key in updatedStats) {
           const randomDecrement = Math.floor(Math.random() * 4);
-          console.log(`before: ${updatedStats[key]}`);
           updatedStats[key] = Math.max(0, updatedStats[key] - randomDecrement);
-          console.log(`after: ${updatedStats[key]}`);
         }
         return updatedStats;
       });
