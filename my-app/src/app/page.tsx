@@ -5,9 +5,27 @@ import ActionButtonSection from './ActionButtonSection';
 import Log from './Log';
 import { jersey20 } from './fonts/fonts';
 import { usePetContext } from './PetContext';
+import { useEffect } from 'react';
 
 export default function Home() {
-  const { name } = usePetContext();
+  const { name, setStats } = usePetContext();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStats((prevStats) => {
+        const updatedStats = { ...prevStats };
+        for (let key in updatedStats) {
+          const randomDecrement = Math.floor(Math.random() * 4);
+          console.log(`before: ${updatedStats[key]}`);
+          updatedStats[key] = Math.max(0, updatedStats[key] - randomDecrement);
+          console.log(`after: ${updatedStats[key]}`);
+        }
+        return updatedStats;
+      });
+    }, 5000);
+
+    return () => clearInterval(interval);
+  });
 
   return (
     <div className="h-screen overflow-hidden mt-3 text-center">
