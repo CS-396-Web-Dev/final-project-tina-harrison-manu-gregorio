@@ -5,7 +5,7 @@ import ActionButtonSection from './ActionButtonSection';
 import LogSection from './LogSection';
 import { jersey20 } from './fonts/fonts';
 import { usePetContext } from './PetContext';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
   const { name, setStats, addToLogs } = usePetContext();
@@ -33,6 +33,8 @@ export default function Home() {
 
           updatedStats[key] = Math.max(0, newStat);
         }
+
+        localStorage.setItem('stats', JSON.stringify(updatedStats));
         return updatedStats;
       });
     }, 5000);

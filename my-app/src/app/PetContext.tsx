@@ -59,13 +59,23 @@ export default function PetContextProvider({ children }: PetContextProviderProps
     });
     const addToLogs = (timestamp: number, message: string) => {
         const formattedDate = formatter.format(new Date(timestamp))
-        setLogs(prevLogs => [...prevLogs, `${formattedDate} CST ${message}`]);
+        setLogs(prevLogs => {
+            const updatedLogs = [...prevLogs, `${formattedDate} CST ${message}`];
+            localStorage.setItem('logs', JSON.stringify(updatedLogs));
+            return updatedLogs
+        });
     }
 
     const [name, setName] = useState<string>('Tamagotchi');
-    const [stats, setStats] = useState<{ [key: string]: number }>(initialStats);
+    const [stats, setStats] = useState<{ [key: string]: number }>(() => {
+        const savedStats = localStorage.getItem('stats');
+        return savedStats ? JSON.parse(savedStats) : initialStats;
+    });
     const [stageOfLife, setStageOfLife] = useState<string>('Baby');
-    const [logs, setLogs] = useState<string[]>([]);
+    const [logs, setLogs] = useState<string[]>(() => {
+        const savedLogs = localStorage.getItem('logs');
+        return savedLogs ? JSON.parse(savedLogs) : [];
+    });
 
     return (
         <PetContext.Provider value={{ name, setName, stats, setStats, stageOfLife, growUp, logs, addToLogs }}>
