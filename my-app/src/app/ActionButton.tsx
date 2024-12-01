@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { jersey20 } from "./fonts/fonts";
 import { usePetContext } from "./PetContext";
 
 interface ActionButtonProps {
@@ -47,7 +46,7 @@ export default function ActionButton({ label, color }: ActionButtonProps) {
 
     return (
         <button className="flex items-center justify-center w-32 h-28 bg-gray-300 rounded-md" onClick={handleClick}>
-            <h2 className={`${jersey20.className} ${color} text-4xl`}>{ label }</h2>
+            <h2 className={`${color} text-4xl`}>{ label }</h2>
         </button>
     );
 }

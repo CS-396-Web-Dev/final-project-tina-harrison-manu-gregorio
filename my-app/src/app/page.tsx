@@ -26,8 +26,8 @@ export default function Home() {
   });
 
   return (
-    <div className="h-screen overflow-hidden mt-3 text-center">
-      <h1 className={`${jersey20.className} text-4xl`}>{ name }</h1>
+    <div className={`${jersey20.className} h-screen overflow-hidden mt-3 text-center`}>
+      <h1 className="text-4xl">{ name }</h1>
       <div className="w-full h-px mt-3 bg-black"></div>
       <main className="flex h-full mt-8 justify-center">
         <div className="w-1/4 h-5/6 bg-sky-400 rounded-md"></div>
