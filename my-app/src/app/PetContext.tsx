@@ -15,6 +15,7 @@ interface Pet {
     growUp:  () => void;
     logs: string[];
     addToLogs:  (timestamp: number, message: string) => void;
+    resetPet: () => void;
 }
   
 const PetContext = createContext<Pet>({
@@ -25,7 +26,8 @@ const PetContext = createContext<Pet>({
     stageOfLife: '',
     growUp: () => {},
     logs: [],
-    addToLogs: () => {}
+    addToLogs: () => {},
+    resetPet: () => {}
 });
 
 export const usePetContext = () => useContext(PetContext);
@@ -57,12 +59,19 @@ export default function PetContextProvider({ children }: PetContextProviderProps
         hourCycle: 'h23',
         timeZone: 'America/Chicago'
     });
+
     const addToLogs = (timestamp: number, message: string) => {
         const formattedDate = formatter.format(new Date(timestamp))
         setLogs(prevLogs => {
             const updatedLogs = [...prevLogs, `${formattedDate} CST ${message}`];
             return updatedLogs;
         });
+    }
+
+    const resetPet = () => {
+        setStats(initialStats);
+        setStageOfLife('Baby');
+        setLogs([]);
     }
 
     const [name, setName] = useState<string>('Tamagotchi');
@@ -100,7 +109,7 @@ export default function PetContextProvider({ children }: PetContextProviderProps
     }, [name, stats, stageOfLife, logs]);
 
     return (
-        <PetContext.Provider value={{ name, setName, stats, setStats, stageOfLife, growUp, logs, addToLogs }}>
+        <PetContext.Provider value={{ name, setName, stats, setStats, stageOfLife, growUp, logs, addToLogs, resetPet }}>
             {children}
         </PetContext.Provider>
     );
