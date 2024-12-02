@@ -12,6 +12,20 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      animation: {
+        clouds: "move-clouds 15s linear infinite",
+        // cloudsSlow: "move-clouds-slow 15s linear infinite",
+      },
+      keyframes: {
+        "move-clouds": {
+          "0%": { transform: "translateX(-200px)" },
+          "100%": { transform: "translateX(100vw)" },
+        },
+        // "move-clouds-slow": {
+        //   "0%": { transform: "translateX(-200px)" },
+        //   "100%": { transform: "translateX(100vw)" },
+        // },
+      },
     },
   },
   plugins: [],
