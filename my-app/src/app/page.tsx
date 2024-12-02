@@ -6,19 +6,21 @@ import LogSection from "./LogSection";
 import ScreenSection from "./ScreenSection";
 import { jersey20 } from "./fonts/fonts";
 import { usePetContext } from "./PetContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Header from "./Header";
 
 export default function Home() {
   const { name, stats, setStats, triggerPrompt } = usePetContext();
   const [petDescriptor, setPetDescriptor] = useState<string>("");
 
-  const statToDescriptor: { [key: string]: string } = {
-    Hunger: "hungry",
-    Happiness: "sad",
-    Sleep: "sleepy",
-    Hygiene: "stinky",
-  };
+  const statToDescriptor = useMemo(() => {
+    return {
+      Hunger: "hungry",
+      Happiness: "sad",
+      Sleep: "sleepy",
+      Hygiene: "stinky",
+    };
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -36,7 +38,6 @@ export default function Home() {
               "normal",
               `${name} is getting ${statToDescriptor[key]}...`
             );
-            newDescriptor = statToDescriptor[key];
           }
 
           updatedStats[key] = Math.max(0, newStat);
