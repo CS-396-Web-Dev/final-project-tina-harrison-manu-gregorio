@@ -25,16 +25,16 @@ interface Pet {
 
 const PetContext = createContext<Pet>({
   name: "",
-  setName: () => {},
+  setName: () => { },
   stats: {},
-  setStats: () => {},
+  setStats: () => { },
   stageOfLife: "",
-  growUp: () => {},
+  growUp: () => { },
   logs: [],
-  addToLogs: () => {},
-  resetPet: () => {},
-  triggerPrompt: () => {},
-  triggerAction: () => {},
+  addToLogs: () => { },
+  resetPet: () => { },
+  triggerPrompt: () => { },
+  triggerAction: () => { },
 });
 
 export const usePetContext = () => useContext(PetContext);
@@ -109,100 +109,100 @@ export default function PetContextProvider({
     });
   };
 
-    const resetPet = () => {
-        setName('Tamagotchi');
-        setStats(initialStats);
-        setStageOfLife('Baby');
-        setLogs([]);
+  const resetPet = () => {
+    setName('Tamagotchi');
+    setStats(initialStats);
+    setStageOfLife('Baby');
+    setLogs([]);
+  }
+
+  const syncPetData = async () => {
+    if (!user) {
+      return;
     }
 
-    const syncPetData = async () => {
-        if (!user) {
-            return;
-        }
+    try {
+      const petRef = doc(db, `users/${user.uid}`);
+      const petDoc = await getDoc(petRef);
+      if (petDoc.exists()) {
+        const data = petDoc.data();
+        setName(data.name);
+        setStats(data.stats);
+        setStageOfLife(data.stageOfLife);
+        setLogs(data.logs);
+      } else {
+        await setDoc(petRef, { name, stats, stageOfLife, logs });
+      }
+    } catch (error) {
+      console.error('Error syncing pet data.');
+    }
+  };
 
-        try {
-            const petRef = doc(db, `users/${user.uid}`);
-            const petDoc = await getDoc(petRef);
-            if (petDoc.exists()) {
-                const data = petDoc.data();
-                setName(data.name);
-                setStats(data.stats);
-                setStageOfLife(data.stageOfLife);
-                setLogs(data.logs);
-            } else {
-                await setDoc(petRef, { name, stats, stageOfLife, logs });
-            }
-        } catch (error) {
-            console.error('Error syncing pet data.');
-        }
-    };
+  const updatePetData = async () => {
+    if (!user) {
+      return;
+    }
 
-    const updatePetData = async () => {
-        if (!user) {
-            return;
-        }
+    try {
+      const petRef = doc(db, `users/${user.uid}`);
+      await updateDoc(petRef, { name, stats, stageOfLife, logs });
+    } catch (error) {
+      console.error('Error updating pet data.');
+    }
+  };
 
-        try {
-            const petRef = doc(db, `users/${user.uid}`);
-            await updateDoc(petRef, { name, stats, stageOfLife, logs });
-        } catch (error) {
-            console.error('Error updating pet data.');
-        }
-    };
+  const syncLocalStorage = () => {
+    const savedName = localStorage.getItem('name');
+    if (savedName) {
+      setName(JSON.parse(savedName));
+    }
 
-    const syncLocalStorage = () => {
-        const savedName = localStorage.getItem('name');
-        if (savedName) {
-            setName(JSON.parse(savedName));
-        }
-
-        const savedStats = localStorage.getItem('stats');
-        if (savedStats) {
-            setStats(JSON.parse(savedStats));
-        }
+    const savedStats = localStorage.getItem('stats');
+    if (savedStats) {
+      setStats(JSON.parse(savedStats));
+    }
 
     const savedStageOfLife = localStorage.getItem("stageOfLife");
     if (savedStageOfLife) {
       setStageOfLife(JSON.parse(savedStageOfLife));
     }
 
-        const savedLogs = localStorage.getItem('logs');
-        if (savedLogs) {
-            setLogs(JSON.parse(savedLogs));
-        }
+    const savedLogs = localStorage.getItem('logs');
+    if (savedLogs) {
+      setLogs(JSON.parse(savedLogs));
     }
+  }
 
-    const updateLocalStorage = () => {
-        localStorage.setItem('name', JSON.stringify(name));
-        localStorage.setItem('stats', JSON.stringify(stats));
-        localStorage.setItem('stageOfLife', JSON.stringify(stageOfLife));
-        localStorage.setItem('logs', JSON.stringify(logs));
+  const updateLocalStorage = () => {
+    localStorage.setItem('name', JSON.stringify(name));
+    localStorage.setItem('stats', JSON.stringify(stats));
+    localStorage.setItem('stageOfLife', JSON.stringify(stageOfLife));
+    localStorage.setItem('logs', JSON.stringify(logs));
+  }
+
+  const [name, setName] = useState<string>('Tamagotchi');
+  const [stats, setStats] = useState<{ [key: string]: number }>(initialStats);
+  const [stageOfLife, setStageOfLife] = useState<string>('Baby');
+  const [logs, setLogs] = useState<string[]>([]);
+  const [user] = useAuthState(auth);
+
+  useEffect(() => {
+    syncLocalStorage();
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      syncPetData();
     }
+  }, [user])
 
-    const [name, setName] = useState<string>('Tamagotchi');
-    const [stats, setStats] = useState<{ [key: string]: number }>(initialStats);
-    const [stageOfLife, setStageOfLife] = useState<string>('Baby');
-    const [logs, setLogs] = useState<string[]>([]);
-    const [user] = useAuthState(auth);
-
-    useEffect(() => {
-        syncLocalStorage();
-    }, []);
-
-    useEffect(() => {
-        if (user) {
-            syncPetData();
-        }
-    }, [user])
-
-    useEffect(() => {
-        if (user) {
-            updatePetData();
-        } else {
-            updateLocalStorage();
-        }
-    }, [name, stats, stageOfLife, logs]);
+  useEffect(() => {
+    if (user) {
+      updatePetData();
+    } else {
+      updateLocalStorage();
+    }
+  }, [name, stats, stageOfLife, logs]);
 
   return (
     <PetContext.Provider
