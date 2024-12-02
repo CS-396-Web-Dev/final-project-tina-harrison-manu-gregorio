@@ -153,11 +153,17 @@ export default function PetContextProvider({ children }: PetContextProviderProps
     }, []);
 
     useEffect(() => {
-        syncPetData();
+        if (user) {
+            syncPetData();
+        }
     }, [user])
 
     useEffect(() => {
-        user ? updatePetData() : updateLocalStorage();
+        if (user) {
+            updatePetData();
+        } else {
+            updateLocalStorage();
+        }
     }, [name, stats, stageOfLife, logs]);
 
     return (
