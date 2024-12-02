@@ -7,7 +7,6 @@ interface ActionButtonProps {
 }
 
 export default function ActionButton({ label, color }: ActionButtonProps) {
-  const [cooldownMessage, setCooldownMessage] = useState<string | null>(null);
   const { name, setStats, growUp, addToLogs, triggerAction } = usePetContext();
   const [feedCount, setFeedCount] = useState<number>(0);
 
