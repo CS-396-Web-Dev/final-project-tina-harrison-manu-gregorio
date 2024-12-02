@@ -8,7 +8,7 @@ export default function StatsSection() {
     <section className="mt-5 text-left border border-white rounded-md p-5 text-white bg-black">
       <h2 className="text-2xl mb-4">Quality Check</h2>
       <div className="grid grid-cols-2 gap-2">
-        {Object.entries(stats).map(([key, value]) => (
+        {Object.entries(stats).sort().map(([key, value]) => (
           <Stat key={key} label={key} value={value} />
         ))}
       </div>
