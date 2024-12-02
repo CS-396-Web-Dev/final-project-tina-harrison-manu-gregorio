@@ -1,7 +1,10 @@
 'use client'
 
 import { createContext, ReactNode, useContext, useState, Dispatch, SetStateAction, useEffect } from 'react';
-  
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, db } from '../../firebaseConfig';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+
 interface PetContextProviderProps {
     children: ReactNode;
 }
@@ -10,28 +13,28 @@ interface Pet {
     name: string;
     setName: Dispatch<SetStateAction<string>>;
     stats: { [key: string]: number };
-    setStats:  Dispatch<SetStateAction<{ [key: string]: number }>>;
+    setStats: Dispatch<SetStateAction<{ [key: string]: number }>>;
     stageOfLife: string;
-    growUp:  () => void;
+    growUp: () => void;
     logs: string[];
-    addToLogs:  (timestamp: number, message: string) => void;
+    addToLogs: (timestamp: number, message: string) => void;
     resetPet: () => void;
 }
-  
+
 const PetContext = createContext<Pet>({
     name: '',
-    setName: () => {},
-    stats : {},
-    setStats: () => {},
+    setName: () => { },
+    stats: {},
+    setStats: () => { },
     stageOfLife: '',
-    growUp: () => {},
+    growUp: () => { },
     logs: [],
-    addToLogs: () => {},
-    resetPet: () => {}
+    addToLogs: () => { },
+    resetPet: () => { }
 });
 
 export const usePetContext = () => useContext(PetContext);
-  
+
 export default function PetContextProvider({ children }: PetContextProviderProps) {
     const initialStats = {
         'Hunger': 100,
@@ -74,17 +77,40 @@ export default function PetContextProvider({ children }: PetContextProviderProps
         setLogs([]);
     }
 
+    const syncPetData = async () => {
+        if (!user) {
+            return;
+        }
+
+        try {
+            const petRef = doc(db, `users/${user.uid}`);
+            const petDoc = await getDoc(petRef);
+            if (petDoc.exists()) {
+                const data = petDoc.data();
+                setName(data.name);
+                setStats(data.stats);
+                setStageOfLife(data.stageOfLife);
+                setLogs(data.logs);
+            } else {
+                await setDoc(petRef, { name, stats, stageOfLife, logs });
+            }
+        } catch (error) {
+            console.error('Error syncing pet data.');
+        }
+    };
+
     const [name, setName] = useState<string>('Tamagotchi');
     const [stats, setStats] = useState<{ [key: string]: number }>(initialStats);
     const [stageOfLife, setStageOfLife] = useState<string>('Baby');
     const [logs, setLogs] = useState<string[]>([]);
+    const [user] = useAuthState(auth);
 
     useEffect(() => {
         const savedName = localStorage.getItem('name');
         if (savedName) {
             setName(JSON.parse(savedName));
         }
-        
+
         const savedStats = localStorage.getItem('stats');
         if (savedStats) {
             setStats(JSON.parse(savedStats));
@@ -108,10 +134,15 @@ export default function PetContextProvider({ children }: PetContextProviderProps
         localStorage.setItem('logs', JSON.stringify(logs));
     }, [name, stats, stageOfLife, logs]);
 
+    useEffect(() => {
+        if (user) {
+            syncPetData();
+        }
+    }, [user])
+
     return (
         <PetContext.Provider value={{ name, setName, stats, setStats, stageOfLife, growUp, logs, addToLogs, resetPet }}>
             {children}
         </PetContext.Provider>
     );
 }
-  
