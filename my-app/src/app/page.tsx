@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import Header from "./Header";
 
 export default function Home() {
-  const { name, setStats, triggerPrompt } = usePetContext();
+  const { name, stats, setStats, triggerPrompt } = usePetContext();
   const [petDescriptor, setPetDescriptor] = useState<string>("");
 
   const statToDescriptor: { [key: string]: string } = {
@@ -42,13 +42,26 @@ export default function Home() {
           updatedStats[key] = Math.max(0, newStat);
         }
 
-        setPetDescriptor(newDescriptor);
+        // setPetDescriptor(newDescriptor);
         return updatedStats;
       });
     }, 5000);
 
     return () => clearInterval(interval);
   });
+
+  useEffect(() => {
+    let newDescriptor = "normal";
+    for (const key in stats) {
+      if (stats[key] <= 5) {
+        newDescriptor = statToDescriptor[key];
+        break;
+      } else if (stats[key] <= 20) {
+        newDescriptor = statToDescriptor[key];
+      }
+    }
+    setPetDescriptor(newDescriptor);
+  }, [stats, statToDescriptor]);
 
   return (
     <div
