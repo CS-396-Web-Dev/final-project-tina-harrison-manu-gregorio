@@ -3,7 +3,7 @@
 import { createContext, ReactNode, useContext, useState, Dispatch, SetStateAction, useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '../../firebaseConfig';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 interface PetContextProviderProps {
     children: ReactNode;
@@ -72,6 +72,7 @@ export default function PetContextProvider({ children }: PetContextProviderProps
     }
 
     const resetPet = () => {
+        setName('Tamagotchi');
         setStats(initialStats);
         setStageOfLife('Baby');
         setLogs([]);
@@ -99,13 +100,20 @@ export default function PetContextProvider({ children }: PetContextProviderProps
         }
     };
 
-    const [name, setName] = useState<string>('Tamagotchi');
-    const [stats, setStats] = useState<{ [key: string]: number }>(initialStats);
-    const [stageOfLife, setStageOfLife] = useState<string>('Baby');
-    const [logs, setLogs] = useState<string[]>([]);
-    const [user] = useAuthState(auth);
+    const updatePetData = async () => {
+        if (!user) {
+            return;
+        }
 
-    useEffect(() => {
+        try {
+            const petRef = doc(db, `users/${user.uid}`);
+            await updateDoc(petRef, { name, stats, stageOfLife, logs });
+        } catch (error) {
+            console.error('Error updating pet data.');
+        }
+    };
+
+    const syncLocalStorage = () => {
         const savedName = localStorage.getItem('name');
         if (savedName) {
             setName(JSON.parse(savedName));
@@ -125,20 +133,32 @@ export default function PetContextProvider({ children }: PetContextProviderProps
         if (savedLogs) {
             setLogs(JSON.parse(savedLogs));
         }
-    }, []);
+    }
 
-    useEffect(() => {
+    const updateLocalStorage = () => {
         localStorage.setItem('name', JSON.stringify(name));
         localStorage.setItem('stats', JSON.stringify(stats));
         localStorage.setItem('stageOfLife', JSON.stringify(stageOfLife));
         localStorage.setItem('logs', JSON.stringify(logs));
-    }, [name, stats, stageOfLife, logs]);
+    }
+
+    const [name, setName] = useState<string>('Tamagotchi');
+    const [stats, setStats] = useState<{ [key: string]: number }>(initialStats);
+    const [stageOfLife, setStageOfLife] = useState<string>('Baby');
+    const [logs, setLogs] = useState<string[]>([]);
+    const [user] = useAuthState(auth);
 
     useEffect(() => {
-        if (user) {
-            syncPetData();
-        }
+        syncLocalStorage();
+    }, []);
+
+    useEffect(() => {
+        syncPetData();
     }, [user])
+
+    useEffect(() => {
+        user ? updatePetData() : updateLocalStorage();
+    }, [name, stats, stageOfLife, logs]);
 
     return (
         <PetContext.Provider value={{ name, setName, stats, setStats, stageOfLife, growUp, logs, addToLogs, resetPet }}>
