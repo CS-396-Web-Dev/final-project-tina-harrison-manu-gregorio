@@ -34,8 +34,8 @@ export default function Home() {
             triggerPrompt(
               "normal",
               `${name} is getting ${statToDescriptor[key]}...`
-              petDescriptor = statToDescriptor[key];
             );
+            petDescriptor = statToDescriptor[key];
           }
 
           updatedStats[key] = Math.max(0, newStat);
