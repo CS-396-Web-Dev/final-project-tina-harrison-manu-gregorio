@@ -1,8 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { usePetContext } from "./PetContext";
+import SignInButton from "./SignInButton";
+import ResetButton from "./ResetButton";
+import SignOutButton from "./SignOutButton";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../firebaseConfig";
 
 export default function Header() {
-  const { name, setName, resetPet } = usePetContext();
+  const { name, setName } = usePetContext();
+  const [user] = useAuthState(auth);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -36,11 +42,7 @@ export default function Header() {
         />
       ) : (
         <div className="flex items-center justify-center">
-          <img
-            className="absolute left-4 w-5 h-5 cursor-pointer"
-            src="/reset.png"
-            onClick={resetPet}
-          />
+          <ResetButton />
           <h1 className="text-4xl">{name}</h1>
           <img
             className="w-5 h-5 ml-2 cursor-pointer"
@@ -48,6 +50,7 @@ export default function Header() {
             alt="Edit pet name"
             onClick={() => setIsEditing(true)}
           />
+          { user ? <SignOutButton /> : <SignInButton /> }
         </div>
       )}
       <div className="w-full h-px mt-3 bg-black"></div>

@@ -1,14 +1,9 @@
 "use client";
 
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useState,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-} from "react";
+import { createContext, ReactNode, useContext, useState, Dispatch, SetStateAction, useEffect } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, db } from '../../firebaseConfig';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 interface PetContextProviderProps {
   children: ReactNode;
@@ -30,16 +25,16 @@ interface Pet {
 
 const PetContext = createContext<Pet>({
   name: "",
-  setName: () => {},
+  setName: () => { },
   stats: {},
-  setStats: () => {},
+  setStats: () => { },
   stageOfLife: "",
-  growUp: () => {},
+  growUp: () => { },
   logs: [],
-  addToLogs: () => {},
-  resetPet: () => {},
-  triggerPrompt: () => {},
-  triggerAction: () => {},
+  addToLogs: () => { },
+  resetPet: () => { },
+  triggerPrompt: () => { },
+  triggerAction: () => { },
 });
 
 export const usePetContext = () => useContext(PetContext);
@@ -115,23 +110,54 @@ export default function PetContextProvider({
   };
 
   const resetPet = () => {
+    setName('Tamagotchi');
     setStats(initialStats);
-    setStageOfLife("Baby");
+    setStageOfLife('Baby');
     setLogs([]);
+  }
+
+  const syncPetData = async () => {
+    if (!user) {
+      return;
+    }
+
+    try {
+      const petRef = doc(db, `users/${user.uid}`);
+      const petDoc = await getDoc(petRef);
+      if (petDoc.exists()) {
+        const data = petDoc.data();
+        setName(data.name);
+        setStats(data.stats);
+        setStageOfLife(data.stageOfLife);
+        setLogs(data.logs);
+      } else {
+        await setDoc(petRef, { name, stats, stageOfLife, logs });
+      }
+    } catch {
+      console.error('Error syncing pet data.');
+    }
   };
 
-  const [name, setName] = useState<string>("Tamagotchi");
-  const [stats, setStats] = useState<{ [key: string]: number }>(initialStats);
-  const [stageOfLife, setStageOfLife] = useState<string>("Baby");
-  const [logs, setLogs] = useState<string[]>([]);
+  const updatePetData = async () => {
+    if (!user) {
+      return;
+    }
 
-  useEffect(() => {
-    const savedName = localStorage.getItem("name");
+    try {
+      const petRef = doc(db, `users/${user.uid}`);
+      await updateDoc(petRef, { name, stats, stageOfLife, logs });
+    } catch {
+      console.error('Error updating pet data.');
+    }
+  };
+
+  const syncLocalStorage = () => {
+    const savedName = localStorage.getItem('name');
     if (savedName) {
       setName(JSON.parse(savedName));
     }
 
-    const savedStats = localStorage.getItem("stats");
+    const savedStats = localStorage.getItem('stats');
     if (savedStats) {
       setStats(JSON.parse(savedStats));
     }
@@ -141,17 +167,41 @@ export default function PetContextProvider({
       setStageOfLife(JSON.parse(savedStageOfLife));
     }
 
-    const savedLogs = localStorage.getItem("logs");
+    const savedLogs = localStorage.getItem('logs');
     if (savedLogs) {
       setLogs(JSON.parse(savedLogs));
     }
+  }
+
+  const updateLocalStorage = () => {
+    localStorage.setItem('name', JSON.stringify(name));
+    localStorage.setItem('stats', JSON.stringify(stats));
+    localStorage.setItem('stageOfLife', JSON.stringify(stageOfLife));
+    localStorage.setItem('logs', JSON.stringify(logs));
+  }
+
+  const [name, setName] = useState<string>('Tamagotchi');
+  const [stats, setStats] = useState<{ [key: string]: number }>(initialStats);
+  const [stageOfLife, setStageOfLife] = useState<string>('Baby');
+  const [logs, setLogs] = useState<string[]>([]);
+  const [user] = useAuthState(auth);
+
+  useEffect(() => {
+    syncLocalStorage();
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("name", JSON.stringify(name));
-    localStorage.setItem("stats", JSON.stringify(stats));
-    localStorage.setItem("stageOfLife", JSON.stringify(stageOfLife));
-    localStorage.setItem("logs", JSON.stringify(logs));
+    if (user) {
+      syncPetData();
+    }
+  }, [user])
+
+  useEffect(() => {
+    if (user) {
+      updatePetData();
+    } else {
+      updateLocalStorage();
+    }
   }, [name, stats, stageOfLife, logs]);
 
   return (
