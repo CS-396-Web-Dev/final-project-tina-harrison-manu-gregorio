@@ -2,15 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { usePetContext } from "./PetContext";
 import SignInButton from "./SignInButton";
 import ResetButton from "./ResetButton";
-import { User } from "firebase/auth";
 import SignOutButton from "./SignOutButton";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../firebaseConfig";
 
-interface HeaderProps {
-    user: User | null | undefined;
-}
-
-export default function Header({ user }: HeaderProps) {
+export default function Header() {
   const { name, setName } = usePetContext();
+  const [user] = useAuthState(auth);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
