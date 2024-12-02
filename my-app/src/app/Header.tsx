@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { usePetContext } from "./PetContext";
 import SignInButton from "./SignInButton";
+import ResetButton from "./ResetButton";
 
 export default function Header() {
-  const { name, setName, resetPet } = usePetContext();
+  const { name, setName } = usePetContext();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -37,11 +38,7 @@ export default function Header() {
         />
       ) : (
         <div className="flex items-center justify-center">
-          <img
-            className="absolute left-4 w-5 h-5 cursor-pointer"
-            src="/reset.png"
-            onClick={resetPet}
-          />
+          <ResetButton />
           <h1 className="text-4xl">{name}</h1>
           <img
             className="w-5 h-5 ml-2 cursor-pointer"
