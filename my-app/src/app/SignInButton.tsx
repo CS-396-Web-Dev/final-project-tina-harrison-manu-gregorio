@@ -5,7 +5,7 @@ export default function SignInButton() {
     const handleSignIn = async () => {
         try {
             await signInWithPopup(auth, googleProvider);
-        } catch (error) {
+        } catch {
             console.error('Could not sign in.');
         }
     };

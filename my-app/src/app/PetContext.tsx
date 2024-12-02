@@ -133,7 +133,7 @@ export default function PetContextProvider({
       } else {
         await setDoc(petRef, { name, stats, stageOfLife, logs });
       }
-    } catch (error) {
+    } catch {
       console.error('Error syncing pet data.');
     }
   };
@@ -146,7 +146,7 @@ export default function PetContextProvider({
     try {
       const petRef = doc(db, `users/${user.uid}`);
       await updateDoc(petRef, { name, stats, stageOfLife, logs });
-    } catch (error) {
+    } catch {
       console.error('Error updating pet data.');
     }
   };

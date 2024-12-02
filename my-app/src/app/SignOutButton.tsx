@@ -9,7 +9,7 @@ export default function SignOutButton() {
         try {
             await signOut(auth);
             resetPet();
-        } catch (error) {
+        } catch {
             console.error('Could not sign out.');
         }
     };
