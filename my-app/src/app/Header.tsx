@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { usePetContext } from "./PetContext";
+import SignInButton from "./SignInButton";
 
 export default function Header() {
   const { name, setName, resetPet } = usePetContext();
@@ -48,6 +49,7 @@ export default function Header() {
             alt="Edit pet name"
             onClick={() => setIsEditing(true)}
           />
+          <SignInButton />
         </div>
       )}
       <div className="w-full h-px mt-3 bg-black"></div>
