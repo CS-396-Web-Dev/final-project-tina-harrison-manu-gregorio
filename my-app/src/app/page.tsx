@@ -21,6 +21,7 @@ export default function Home() {
       Hygiene: "stinky",
     };
   }, []);
+  type StatKey = keyof typeof statToDescriptor;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -32,11 +33,14 @@ export default function Home() {
           const newStat = updatedStats[key] - randomDecrement;
 
           if (newStat <= 5) {
-            triggerPrompt("urgent", `${name} is ${statToDescriptor[key]}!!!`);
+            triggerPrompt(
+              "urgent",
+              `${name} is ${statToDescriptor[key as StatKey]}!!!`
+            );
           } else if (newStat <= 20) {
             triggerPrompt(
               "normal",
-              `${name} is getting ${statToDescriptor[key]}...`
+              `${name} is getting ${statToDescriptor[key as StatKey]}...`
             );
           }
 
@@ -52,15 +56,17 @@ export default function Home() {
   });
 
   useEffect(() => {
-    let newDescriptor = "normal";
-    for (const key in stats) {
-      if (stats[key] <= 5) {
-        newDescriptor = statToDescriptor[key];
-        break;
-      } else if (stats[key] <= 20) {
-        newDescriptor = statToDescriptor[key];
-      }
-    }
+    const descriptors = Object.keys(stats)
+      .filter((key) => stats[key as StatKey] <= 20)
+      .map((key) => statToDescriptor[key as StatKey]);
+
+    const newDescriptor =
+      descriptors.find(
+        (_, index) => stats[Object.keys(stats)[index] as StatKey] <= 5
+      ) ||
+      descriptors[0] ||
+      "normal";
+
     setPetDescriptor(newDescriptor);
   }, [stats, statToDescriptor]);
 
