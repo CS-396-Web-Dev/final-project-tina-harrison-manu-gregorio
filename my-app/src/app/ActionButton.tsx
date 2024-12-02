@@ -7,7 +7,7 @@ interface ActionButtonProps {
 }
 
 export default function ActionButton({ label, color }: ActionButtonProps) {
-  const { name, setStats, growUp, addToLogs, triggerAction } = usePetContext();
+  const { name, setStats, growUp, triggerAction } = usePetContext();
   const [feedCount, setFeedCount] = useState<number>(0);
 
   const actionToStatMap: { [key: string]: string } = {
