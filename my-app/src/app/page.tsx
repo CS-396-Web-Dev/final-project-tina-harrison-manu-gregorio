@@ -27,7 +27,6 @@ export default function Home() {
     const interval = setInterval(() => {
       setStats((prevStats) => {
         const updatedStats = { ...prevStats };
-        let newDescriptor = "normal";
         for (const key in updatedStats) {
           const randomDecrement = Math.floor(Math.random() * 3);
           const newStat = updatedStats[key] - randomDecrement;
