@@ -6,49 +6,68 @@ import LogSection from "./LogSection";
 import ScreenSection from "./ScreenSection";
 import { jersey20 } from "./fonts/fonts";
 import { usePetContext } from "./PetContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Header from "./Header";
 
 export default function Home() {
-  const { name, setStats, triggerPrompt } = usePetContext();
+  const { name, stats, setStats, triggerPrompt } = usePetContext();
   const [petDescriptor, setPetDescriptor] = useState<string>("");
 
-  const statToDescriptor: { [key: string]: string } = {
-    Hunger: "hungry",
-    Happiness: "sad",
-    Sleep: "sleepy",
-    Hygiene: "stinky",
-  };
+  const statToDescriptor = useMemo(() => {
+    return {
+      Hunger: "hungry",
+      Happiness: "sad",
+      Sleep: "sleepy",
+      Hygiene: "stinky",
+    };
+  }, []);
+  type StatKey = keyof typeof statToDescriptor;
 
   useEffect(() => {
     const interval = setInterval(() => {
       setStats((prevStats) => {
         const updatedStats = { ...prevStats };
-        let newDescriptor = "normal";
         for (const key in updatedStats) {
           const randomDecrement = Math.floor(Math.random() * 3);
           const newStat = updatedStats[key] - randomDecrement;
 
           if (newStat <= 5) {
-            triggerPrompt("urgent", `${name} is ${statToDescriptor[key]}!!!`);
+            triggerPrompt(
+              "urgent",
+              `${name} is ${statToDescriptor[key as StatKey]}!!!`
+            );
           } else if (newStat <= 20) {
             triggerPrompt(
               "normal",
-              `${name} is getting ${statToDescriptor[key]}...`
+              `${name} is getting ${statToDescriptor[key as StatKey]}...`
             );
-            newDescriptor = statToDescriptor[key];
           }
 
           updatedStats[key] = Math.max(0, newStat);
         }
 
-        setPetDescriptor(newDescriptor);
+        // setPetDescriptor(newDescriptor);
         return updatedStats;
       });
     }, 5000);
 
     return () => clearInterval(interval);
   });
+
+  useEffect(() => {
+    const descriptors = Object.keys(stats)
+      .filter((key) => stats[key as StatKey] <= 20)
+      .map((key) => statToDescriptor[key as StatKey]);
+
+    const newDescriptor =
+      descriptors.find(
+        (_, index) => stats[Object.keys(stats)[index] as StatKey] <= 5
+      ) ||
+      descriptors[0] ||
+      "normal";
+
+    setPetDescriptor(newDescriptor);
+  }, [stats, statToDescriptor]);
 
   return (
     <div
