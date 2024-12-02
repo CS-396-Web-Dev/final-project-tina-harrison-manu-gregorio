@@ -2,8 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { usePetContext } from "./PetContext";
 import SignInButton from "./SignInButton";
 import ResetButton from "./ResetButton";
+import { User } from "firebase/auth";
+import SignOutButton from "./SignOutButton";
 
-export default function Header() {
+interface HeaderProps {
+    user: User | null | undefined;
+}
+
+export default function Header({ user }: HeaderProps) {
   const { name, setName } = usePetContext();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -46,7 +52,7 @@ export default function Header() {
             alt="Edit pet name"
             onClick={() => setIsEditing(true)}
           />
-          <SignInButton />
+          { user ? <SignOutButton /> : <SignInButton /> }
         </div>
       )}
       <div className="w-full h-px mt-3 bg-black"></div>

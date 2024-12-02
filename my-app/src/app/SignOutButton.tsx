@@ -2,7 +2,6 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
 
 export default function SignOutButton() {
-
     const handleSignOut = async () => {
         try {
             await signOut(auth);
