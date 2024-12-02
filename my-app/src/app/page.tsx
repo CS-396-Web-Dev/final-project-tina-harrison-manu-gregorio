@@ -3,13 +3,15 @@
 import StatsSection from "./StatsSection";
 import ActionButtonSection from "./ActionButtonSection";
 import LogSection from "./LogSection";
+import ScreenSection from "./ScreenSection";
 import { jersey20 } from "./fonts/fonts";
 import { usePetContext } from "./PetContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Header from "./Header";
 
 export default function Home() {
   const { name, setStats, triggerPrompt } = usePetContext();
+  const [petDescriptor, setPetDescriptor] = useState<string>("");
 
   const statToDescriptor: { [key: string]: string } = {
     Hunger: "hungry",
@@ -17,13 +19,12 @@ export default function Home() {
     Sleep: "sleepy",
     Hygiene: "stinky",
   };
-  
-  let petDescriptor = "";
-  
+
   useEffect(() => {
     const interval = setInterval(() => {
       setStats((prevStats) => {
         const updatedStats = { ...prevStats };
+        let newDescriptor = "normal";
         for (const key in updatedStats) {
           const randomDecrement = Math.floor(Math.random() * 3);
           const newStat = updatedStats[key] - randomDecrement;
@@ -34,13 +35,14 @@ export default function Home() {
             triggerPrompt(
               "normal",
               `${name} is getting ${statToDescriptor[key]}...`
-              petDescriptor = statToDescriptor[key];
             );
+            newDescriptor = statToDescriptor[key];
           }
 
           updatedStats[key] = Math.max(0, newStat);
         }
 
+        setPetDescriptor(newDescriptor);
         return updatedStats;
       });
     }, 5000);
@@ -53,8 +55,8 @@ export default function Home() {
       className={`${jersey20.className} h-screen mt-3 text-center lg:overflow-hidden`}
     >
       <Header />
-      <main>
-        <Screen petDescriptor={petDescriptor} />
+      <main className="lg:flex lg:flex-row h-full mx-5 justify-center">
+        <ScreenSection petDescriptor={petDescriptor} />
         <div className="flex flex-col lg:ml-16">
           <StatsSection />
           <ActionButtonSection />
