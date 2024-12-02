@@ -7,7 +7,8 @@ interface ActionButtonProps {
 }
 
 export default function ActionButton({ label, color }: ActionButtonProps) {
-  const { name, setStats, growUp, triggerAction } = usePetContext();
+  const [cooldownMessage, setCooldownMessage] = useState<string | null>(null);
+  const { name, setStats, growUp, addToLogs, triggerAction } = usePetContext();
   const [feedCount, setFeedCount] = useState<number>(0);
 
   const actionToStatMap: { [key: string]: string } = {
@@ -43,15 +44,24 @@ export default function ActionButton({ label, color }: ActionButtonProps) {
       }
     };
 
-    triggerAction(action, actionToMessageMap[label]);
+    const success = triggerAction(action, actionToMessageMap[label]);
+    if (!success) {
+      addToLogs(Date.now(), "Action is on cooldown. Please wait!");
+      setTimeout(() => setCooldownMessage(null), 2000);
+    }
   };
 
   return (
-    <button
-      className="flex items-center justify-center w-32 h-28 bg-gray-300 rounded-md"
-      onClick={handleClick}
-    >
-      <h2 className={`${color} text-4xl`}>{label}</h2>
-    </button>
+    <div className="flex flex-col items-center">
+      <button
+        className="flex items-center justify-center w-32 h-28 bg-gray-300 rounded-md"
+        onClick={handleClick}
+      >
+        <h2 className={`${color} text-4xl`}>{label}</h2>
+      </button>
+      {cooldownMessage && (
+        <p className="text-red-500 text-sm mt-2">{cooldownMessage}</p>
+      )}
+    </div>
   );
 }
