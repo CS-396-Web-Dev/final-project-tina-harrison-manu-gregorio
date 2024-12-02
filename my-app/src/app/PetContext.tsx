@@ -15,9 +15,6 @@ interface PetContextProviderProps {
 }
 
 interface Pet {
-  triggerPrompt: (urgency: "urgent" | "normal", message: string) => void;
-  triggerAction: (action: () => void, message: string) => void;
-
   name: string;
   setName: Dispatch<SetStateAction<string>>;
   stats: { [key: string]: number };
@@ -27,6 +24,8 @@ interface Pet {
   logs: string[];
   addToLogs: (timestamp: number, message: string) => void;
   resetPet: () => void;
+  triggerPrompt: (urgency: "urgent" | "normal", message: string) => void;
+  triggerAction: (action: () => void, message: string) => boolean;
 }
 
 const PetContext = createContext<Pet>({
@@ -40,7 +39,7 @@ const PetContext = createContext<Pet>({
   addToLogs: () => {},
   resetPet: () => {},
   triggerPrompt: () => {},
-  triggerAction: () => {},
+  triggerAction: () => false,
 });
 
 export const usePetContext = () => useContext(PetContext);
@@ -70,12 +69,14 @@ export default function PetContextProvider({
     }
   };
 
-  const triggerAction = (action: () => void, message: string) => {
+  const triggerAction = (action: () => void, message: string): boolean => {
     if (canAct()) {
       setLastActionTime(Date.now());
       action();
       addToLogs(Date.now(), message);
+      return true;
     }
+    return false;
   };
 
   const initialStats = {

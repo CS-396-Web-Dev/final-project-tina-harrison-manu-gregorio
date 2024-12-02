@@ -22,7 +22,7 @@ body {
 
 .scene {
   position: relative;
-  overflow: hidden; /* Restrict cloud movement to within this container */
+  overflow: hidden;
 }
 
 @keyframes move-clouds {
@@ -34,19 +34,6 @@ body {
   }
 }
 
-/* @keyframes move-clouds-slow {
-  0% {
-    transform: translateX(-200px);
-  }
-  100% {
-    transform: translateX(100vw);
-  }
-} */
-
 .animate-clouds {
-  animation: move-clouds 15s linear infinite;
+  animation: move-clouds 12s linear infinite;
 }
-
-/* .animate-clouds-slow {
-  animation: move-clouds-slow 15s linear infinite;
-} */
