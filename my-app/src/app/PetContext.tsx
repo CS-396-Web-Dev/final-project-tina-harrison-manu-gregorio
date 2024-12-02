@@ -25,7 +25,7 @@ interface Pet {
   addToLogs: (timestamp: number, message: string) => void;
   resetPet: () => void;
   triggerPrompt: (urgency: "urgent" | "normal", message: string) => void;
-  triggerAction: (action: () => void, message: string) => boolean;
+  triggerAction: (action: () => void, message: string) => void;
 }
 
 const PetContext = createContext<Pet>({
@@ -39,7 +39,7 @@ const PetContext = createContext<Pet>({
   addToLogs: () => {},
   resetPet: () => {},
   triggerPrompt: () => {},
-  triggerAction: () => false,
+  triggerAction: () => {},
 });
 
 export const usePetContext = () => useContext(PetContext);
@@ -58,7 +58,7 @@ export default function PetContextProvider({
 
   const canAct = () => {
     const now = Date.now();
-    const cooldown = 2000; // Example: 5s action cooldown
+    const cooldown = 1000;
     return !lastActionTime || now - lastActionTime >= cooldown;
   };
 
@@ -69,14 +69,14 @@ export default function PetContextProvider({
     }
   };
 
-  const triggerAction = (action: () => void, message: string): boolean => {
+  const triggerAction = (action: () => void, message: string) => {
     if (canAct()) {
       setLastActionTime(Date.now());
       action();
       addToLogs(Date.now(), message);
-      return true;
+    } else {
+      addToLogs(Date.now(), "Action is on cooldown. Please wait!");
     }
-    return false;
   };
 
   const initialStats = {

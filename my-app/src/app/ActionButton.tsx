@@ -44,11 +44,7 @@ export default function ActionButton({ label, color }: ActionButtonProps) {
       }
     };
 
-    const success = triggerAction(action, actionToMessageMap[label]);
-    if (!success) {
-      addToLogs(Date.now(), "Action is on cooldown. Please wait!");
-      setTimeout(() => setCooldownMessage(null), 2000);
-    }
+    triggerAction(action, actionToMessageMap[label]);
   };
 
   return (
@@ -59,9 +55,6 @@ export default function ActionButton({ label, color }: ActionButtonProps) {
       >
         <h2 className={`${color} text-4xl`}>{label}</h2>
       </button>
-      {cooldownMessage && (
-        <p className="text-red-500 text-sm mt-2">{cooldownMessage}</p>
-      )}
     </div>
   );
 }
