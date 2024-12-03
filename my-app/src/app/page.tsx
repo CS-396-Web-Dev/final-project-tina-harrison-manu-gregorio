@@ -31,12 +31,12 @@ export default function Home() {
           const randomDecrement = Math.floor(Math.random() * 3);
           const newStat = updatedStats[key] - randomDecrement;
 
-          if (newStat <= 5) {
+          if (newStat <= 20) {
             triggerPrompt(
               "urgent",
               `${name} is ${statToDescriptor[key as StatKey]}!!!`
             );
-          } else if (newStat <= 20) {
+          } else if (newStat <= 40) {
             triggerPrompt(
               "normal",
               `${name} is getting ${statToDescriptor[key as StatKey]}...`
@@ -56,12 +56,12 @@ export default function Home() {
 
   useEffect(() => {
     const descriptors = Object.keys(stats)
-      .filter((key) => stats[key as StatKey] <= 20)
+      .filter((key) => stats[key as StatKey] <= 40)
       .map((key) => statToDescriptor[key as StatKey]);
 
     const newDescriptor =
       descriptors.find(
-        (_, index) => stats[Object.keys(stats)[index] as StatKey] <= 5
+        (_, index) => stats[Object.keys(stats)[index] as StatKey] <= 20
       ) ||
       descriptors[0] ||
       "normal";
