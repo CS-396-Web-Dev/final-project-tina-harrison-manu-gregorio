@@ -5,13 +5,18 @@ interface ScreenProps {
 export default function ScreenSection({ petDescriptor }: ScreenProps) {
   let petImageSource = "/normal-cat.png";
 
-  if (
-    petDescriptor == "stinky" ||
-    petDescriptor == "sad" ||
-    petDescriptor == "sleepy"
-  ) {
-    petImageSource = "/" + petDescriptor + "-cat.png";
+  function changeSource() {
+    if (
+      petDescriptor == "stinky" ||
+      petDescriptor == "sad" ||
+      petDescriptor == "sleepy" ||
+      petDescriptor == "hungry"
+    ) {
+      petImageSource = "/" + petDescriptor + "-cat.png";
+    }
   }
+
+  changeSource();
 
   return (
     <div className="lg:w-1/3 h-5/6 mt-5 bg-sky-400 rounded-md relative">
