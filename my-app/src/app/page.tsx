@@ -45,7 +45,7 @@ export default function Home() {
 
           updatedStats[key] = Math.max(0, newStat);
         }
-        console.log(updatedStats);
+
         return updatedStats;
       });
     }, 5000);
