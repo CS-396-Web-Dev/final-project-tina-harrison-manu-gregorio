@@ -30,6 +30,19 @@ export default function ActionButton({ label, color }: ActionButtonProps) {
         const updatedStats = { ...prevStats };
         const key = actionToStatMap[label];
         updatedStats[key] = Math.min(100, updatedStats[key] + 10);
+
+        // checks and balances
+        if (key == "Hunger") { 
+          updatedStats["Sleep"] = Math.min(100, updatedStats["Sleep"] - 5); 
+        }
+        if (key == "Happiness") { 
+          updatedStats["Hygiene"] = Math.min(100, updatedStats["Hygeine"] - 5); 
+          updatedStats["Sleep"] = Math.min(100, updatedStats["Sleep"] - 5); 
+        }
+        if (key == "Sleep") { 
+          updatedStats["Hunger"] = Math.min(100, updatedStats["Hunger"] - 2); 
+        }
+        
         return updatedStats;
       });
 
