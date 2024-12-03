@@ -46,6 +46,7 @@ export default function ActionButton({ label, color }: ActionButtonProps) {
         return updatedStats;
       });
 
+      // stage of life
       if (label == "Feed") {
         if (feedCount == 4) {
           growUp();

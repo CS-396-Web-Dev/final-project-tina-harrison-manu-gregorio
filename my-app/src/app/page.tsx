@@ -46,7 +46,6 @@ export default function Home() {
           updatedStats[key] = Math.max(0, newStat);
         }
 
-        // setPetDescriptor(newDescriptor);
         return updatedStats;
       });
     }, 5000);
