@@ -33,14 +33,14 @@ export default function ActionButton({ label, color }: ActionButtonProps) {
 
         // checks and balances
         if (key == "Hunger") { 
-          updatedStats["Sleep"] = Math.min(100, updatedStats["Sleep"] - 5); 
+          updatedStats["Sleep"] -= 5;
         }
         if (key == "Happiness") { 
-          updatedStats["Hygiene"] = Math.min(100, updatedStats["Hygeine"] - 5); 
-          updatedStats["Sleep"] = Math.min(100, updatedStats["Sleep"] - 5); 
+          updatedStats["Hygiene"] -= 5; 
+          updatedStats["Sleep"] -= 5;
         }
         if (key == "Sleep") { 
-          updatedStats["Hunger"] = Math.min(100, updatedStats["Hunger"] - 2); 
+          updatedStats["Hunger"] -= 2;
         }
         
         return updatedStats;
